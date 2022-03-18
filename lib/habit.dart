@@ -2,57 +2,57 @@ import 'package:flutter/material.dart';
 import 'dart:core';
 
 class Habit {
-
   String habit;
-  bool sunday;
-  bool monday;
-  bool tuesday;
-  bool wednesday;
-  bool thursday;
-  bool friday;
-  bool saturday;
+  var days = [false, false, false, false, false, false, false];
 
   Habit({
     required this.habit,
-    this.sunday = false,
-    this.monday = false,
-    this.tuesday = false,
-    this.wednesday = false,
-    this.thursday = false,
-    this.friday = false,
-    this.saturday = false,
   });
+
+  @override
+  String toString() {
+    // TODO: To persist data simply in a key/value pair, I need to have functions that convert habits to and from strings
+    // 'habitname:TFFTFFT'
+    String ret = habit + ":";
+    for(var d in days) {
+      if(d) {
+        ret += "T";
+      } else {
+        ret += "F";
+      }
+    }
+    return ret;
+  }
+
+  static Habit fromString(String s){
+    var split = s.split(":");
+    var habitName = split[0];
+    Habit h = Habit(habit: habitName);
+
+    for (int i = 0; i < 7; i++) {
+      if (split[1][i] == "T") {
+        h.setBoolFromInt(i);
+      }
+    }
+    
+    return h;
+  }
 
   Widget getHabitTile() {
     return ListTile(
-      title: Text(habit),
+      title: Text(
+        habit,
+        style: const TextStyle(color: Colors.white),
+      ),
       //trailing: Text(date.toString())
     );
   }
 
-   bool setBoolFromInt(int i) {
-    switch(i) {
-      case 0: sunday = !sunday; break;
-      case 1: monday = !monday; break;
-      case 2: tuesday = !tuesday; break;
-      case 3: wednesday = !wednesday; break;
-      case 4: thursday = !thursday; break;
-      case 5: friday = !friday; break;
-      case 6: saturday = !saturday; break;
-    }
-    return false;
-  } 
-  bool getBoolFromInt(int i) {
-    switch(i) {
-      case 0: return sunday;
-      case 1: return monday; 
-      case 2: return tuesday;
-      case 3: return wednesday;
-      case 4: return thursday;
-      case 5: return friday;
-      case 6: return saturday;
-    }
-    return false;
+  void setBoolFromInt(int i) {
+    days[i] = !days[i];
   }
-  
+
+  bool getBoolFromInt(int i) {
+    return days[i];
+  }
 }
